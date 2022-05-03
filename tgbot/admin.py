@@ -4,7 +4,7 @@ from django.shortcuts import render
 
 from dtb.settings import DEBUG
 
-from tgbot.models import Location
+from tgbot.models import Contact, Message, Location
 from tgbot.models import User
 from tgbot.forms import BroadcastForm
 
@@ -48,6 +48,8 @@ class UserAdmin(admin.ModelAdmin):
                 request, "admin/broadcast_message.html", {'form': form, 'title': u'Broadcast message'}
             )
 
+@admin.register(Contact)
+@admin.register(Message)
 
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):

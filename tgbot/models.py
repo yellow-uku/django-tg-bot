@@ -16,7 +16,7 @@ class AdminUserManager(Manager):
     def get_queryset(self):
         return super().get_queryset().filter(is_admin=True)
 
-
+# table Users
 class User(CreateUpdateTracker):
     user_id = models.PositiveBigIntegerField(primary_key=True)  # telegram_id
     username = models.CharField(max_length=32, **nb)
@@ -74,6 +74,22 @@ class User(CreateUpdateTracker):
             return f'@{self.username}'
         return f"{self.first_name} {self.last_name}" if self.last_name else f"{self.first_name}"
 
+
+# table User - Contacts
+class Contact(CreateUpdateTracker):
+    tg_user = models.ManyToManyField(User)
+    contact_id = models.PositiveBigIntegerField(primary_key=True)
+    contact_username = models.CharField(max_length=32, **nb)
+    contact_first_name = models.CharField(max_length=256)
+    contact_last_name = models.CharField(max_length=256, **nb)
+
+    def __str__(self):
+        return f'@{self.contact_username}' if self.contact_username is not None else f'{self.contact_id}'
+
+# table Contacts - Text Messages
+class Message(CreateUpdateTracker):
+    contact_id = models.ManyToManyField(Contact)
+    contact_message = models.TextField()
 
 class Location(CreateTracker):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
