@@ -25,7 +25,8 @@ from tgbot.handlers.onboarding.manage_data import SECRET_LEVEL_BUTTON
 from tgbot.handlers.broadcast_message.manage_data import CONFIRM_DECLINE_BROADCAST
 from tgbot.handlers.broadcast_message.static_text import broadcast_command
 
-
+from tgbot.handlers.forward_messages import handlers as forward_handlers
+ 
 def setup_dispatcher(dp):
     """
     Adding handlers for events from Telegram
@@ -44,6 +45,9 @@ def setup_dispatcher(dp):
 
     # secret level
     dp.add_handler(CallbackQueryHandler(onboarding_handlers.secret_level, pattern=f"^{SECRET_LEVEL_BUTTON}"))
+
+    # forwarded message
+    dp.add_handler(MessageHandler(Filters.forwarded & Filters.text, forward_handlers.reply_to_forward_message))
 
     # broadcast message
     dp.add_handler(
@@ -89,8 +93,7 @@ def run_pooling():
     print(f"Pooling of '{bot_link}' started")
     # it is really useful to send '👋' emoji to developer
     # when you run local test
-    # bot.send_message(text='👋', chat_id=<YOUR TELEGRAM ID>)
-
+    # bot.send_message(text='👋', chat_id=458739185)
     updater.start_polling()
     updater.idle()
 
@@ -99,6 +102,7 @@ def run_pooling():
 bot = Bot(TELEGRAM_TOKEN)
 try:
     TELEGRAM_BOT_USERNAME = bot.get_me()["username"]
+
 except telegram.error.Unauthorized:
     logging.error(f"Invalid TELEGRAM_TOKEN.")
     sys.exit(1)
