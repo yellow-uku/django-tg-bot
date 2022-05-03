@@ -6,6 +6,8 @@ Sexy Django + python-telegram-bot + Celery + Redis + Postgres + Dokku + GitHub A
 
 ### Check the example bot that uses the code from Main branch: [t.me/djangotelegrambot](https://t.me/djangotelegrambot)
 
+### My Bot, which uses previous example as a template, here: [t.me/AwesomeContacts_bot](https://t.me/AwesomeContacts_bot)
+
 ## Features
 
 * Database: Postgres, Sqlite3, MySQL - you decide!
