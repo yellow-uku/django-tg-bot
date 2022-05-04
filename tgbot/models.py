@@ -8,7 +8,7 @@ from telegram import Update
 from telegram.ext import CallbackContext
 
 from dtb.settings import DEBUG
-from tgbot.handlers.utils.info import extract_user_data_from_update
+from tgbot.handlers.utils.info import extract_user_data_from_update, extract_contact_data_from_update
 from utils.models import CreateUpdateTracker, nb, CreateTracker, GetOrNoneManager
 
 
@@ -76,18 +76,25 @@ class User(CreateUpdateTracker):
 
 
 # table User - Contacts
-class Contact(CreateUpdateTracker):
-    tg_user = models.ManyToManyField(User)
+class Contact(models.Model):
     contact_id = models.PositiveBigIntegerField(primary_key=True)
+    tg_user = models.ManyToManyField(User)
     contact_username = models.CharField(max_length=32, **nb)
     contact_first_name = models.CharField(max_length=256)
     contact_last_name = models.CharField(max_length=256, **nb)
 
     def __str__(self):
         return f'@{self.contact_username}' if self.contact_username is not None else f'{self.contact_id}'
+   
+    @classmethod
+    def get_contact(cls, update: Update, context: CallbackContext) -> Tuple[User, bool]:
+        """ python-telegram-bot's Update, Context --> Contact instance """
+        data = extract_contact_data_from_update(update)
+        c = data['id']
+        return c
 
 # table Contacts - Text Messages
-class Message(CreateUpdateTracker):
+class Message(models.Model):
     contact_id = models.ManyToManyField(Contact)
     contact_message = models.TextField()
 
