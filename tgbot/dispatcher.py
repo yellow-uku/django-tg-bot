@@ -47,7 +47,8 @@ def setup_dispatcher(dp):
     dp.add_handler(CallbackQueryHandler(onboarding_handlers.secret_level, pattern=f"^{SECRET_LEVEL_BUTTON}"))
 
     # forwarded message
-    dp.add_handler(MessageHandler(Filters.forwarded & Filters.text, forward_handlers.reply_to_forward_message))
+   # dp.add_handler(MessageHandler(Filters.forwarded & Filters.text, forward_handlers.reply_to_forward_message))
+    dp.add_handler(MessageHandler(Filters.forwarded & Filters.text, forward_handlers.forward_message_handler))
 
     # broadcast message
     dp.add_handler(

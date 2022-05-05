@@ -1,5 +1,5 @@
 from functools import wraps
-from typing import Dict, Callable
+from typing import Dict, Callable, Tuple
 
 import telegram
 from telegram import Update
@@ -43,10 +43,14 @@ def extract_user_data_from_update(update: Update) -> Dict:
 def extract_contact_data_from_update(update: Update) -> Dict:
     """ python-telegram-bot's Update instance --> Contact info """
     if update.message is not None:
-        user = update.message.forward_from.to_dict()
+        contact = update.message.forward_from
+        user = update.message.from_user.to_dict()
     else:
         raise Exception(f"Can't extract contact data from update: {update}")
-    return user
+    data = dict()
+    data['contact'] = contact
+    data['user'] = user
+    return data
 """
     return dict(
         user_id=user["id"],

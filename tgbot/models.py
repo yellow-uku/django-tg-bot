@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Union, Optional, Tuple
+from typing import Union, Optional, Tuple, Dict
 
 from django.db import models
 from django.db.models import QuerySet, Manager
@@ -75,25 +75,32 @@ class User(CreateUpdateTracker):
         return f"{self.first_name} {self.last_name}" if self.last_name else f"{self.first_name}"
 
 
-# table User - Contacts
+# table User - Contact
 class Contact(models.Model):
     contact_id = models.PositiveBigIntegerField(primary_key=True)
-    tg_user = models.ManyToManyField(User)
+ #   tg_user = models.ManyToManyField(User)
     contact_username = models.CharField(max_length=32, **nb)
     contact_first_name = models.CharField(max_length=256)
     contact_last_name = models.CharField(max_length=256, **nb)
+
+    objects = GetOrNoneManager()
 
     def __str__(self):
         return f'@{self.contact_username}' if self.contact_username is not None else f'{self.contact_id}'
    
     @classmethod
-    def get_contact(cls, update: Update, context: CallbackContext) -> Tuple[User, bool]:
-        """ python-telegram-bot's Update, Context --> Contact instance """
+    def get_contact_data(cls, update: Update) -> Dict:
+        """ python-telegram-bot's Update --> Contact instance """
         data = extract_contact_data_from_update(update)
-        c = data['id']
-        return c
+        return data
 
-# table Contacts - Text Messages
+    @classmethod
+    def create_contact(cls, data):
+        id = cls(contact_id=data['contact']['id'])
+        username = cls(tg_user=data['contact']['username'])
+        return username
+
+# table Contact - Text Message
 class Message(models.Model):
     contact_id = models.ManyToManyField(Contact)
     contact_message = models.TextField()
