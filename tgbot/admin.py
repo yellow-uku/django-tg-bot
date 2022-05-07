@@ -48,8 +48,13 @@ class UserAdmin(admin.ModelAdmin):
                 request, "admin/broadcast_message.html", {'form': form, 'title': u'Broadcast message'}
             )
 
-admin.site.register(Contact)
-# @admin.register(Message)
+
+@admin.register(Contact)
+class ContactAdmin(admin.ModelAdmin):
+    list_display = [
+        'contact_id', 'contact_username', 'contact_first_name', 'contact_last_name'
+    ]
+#admin.site.register(Contact, ContactAdmin)
 
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):

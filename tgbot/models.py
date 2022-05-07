@@ -78,7 +78,7 @@ class User(CreateUpdateTracker):
 # table User - Contact
 class Contact(models.Model):
     contact_id = models.PositiveBigIntegerField(primary_key=True)
- #   tg_user = models.ManyToManyField(User)
+ #   tg_user = models.PositiveBigIntegerField()
     contact_username = models.CharField(max_length=32, **nb)
     contact_first_name = models.CharField(max_length=256)
     contact_last_name = models.CharField(max_length=256, **nb)
