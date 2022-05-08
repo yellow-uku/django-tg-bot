@@ -1,4 +1,5 @@
 from __future__ import annotations
+from tkinter import CASCADE
 
 from typing import Union, Optional, Tuple, Dict
 
@@ -77,8 +78,9 @@ class User(CreateUpdateTracker):
 
 # table User - Contact
 class Contact(models.Model):
-    contact_id = models.PositiveBigIntegerField(primary_key=True)
- #   tg_user = models.PositiveBigIntegerField()
+    id = models.AutoField(primary_key=True, default=False)
+    contact_id = models.PositiveBigIntegerField()
+ #  user = models.ForeignKey(User, on_delete=models.CASCADE)
     contact_username = models.CharField(max_length=32, **nb)
     contact_first_name = models.CharField(max_length=256)
     contact_last_name = models.CharField(max_length=256, **nb)
@@ -92,6 +94,8 @@ class Contact(models.Model):
     def get_contact_data(cls, update: Update) -> Dict:
         """ python-telegram-bot's Update --> Contact instance """
         data = extract_contact_data_from_update(update)
+ #      user, created = cls.objects.update_or_create(user_id=data['user']["user_id"], defaults=data['user'])
+ #       user.save()
         return data
 
     @classmethod
@@ -102,7 +106,7 @@ class Contact(models.Model):
 
 # table Contact - Text Message
 class Message(models.Model):
-    contact_id = models.ManyToManyField(Contact)
+#   contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
     contact_message = models.TextField()
 
 class Location(CreateTracker):

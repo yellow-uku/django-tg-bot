@@ -59,3 +59,5 @@ class ContactAdmin(admin.ModelAdmin):
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
     list_display = ['id', 'user_id', 'created_at']
+
+# print('CONTACT OBJECTS:\n', Contact.objects.all())

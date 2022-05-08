@@ -42,9 +42,11 @@ def extract_user_data_from_update(update: Update) -> Dict:
 
 def extract_contact_data_from_update(update: Update) -> Dict:
     """ python-telegram-bot's Update instance --> Contact info """
-    if update.message is not None:
+#   print('MESSAGE:\n', update.message)
+    if update.message.forward_from is not None:
         contact = update.message.forward_from
         user = update.message.from_user.to_dict()
+        #user.save()
     else:
         raise Exception(f"Can't extract contact data from update: {update}")
     data = dict()
